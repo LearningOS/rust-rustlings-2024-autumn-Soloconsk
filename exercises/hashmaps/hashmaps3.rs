@@ -1,31 +1,27 @@
 // hashmaps3.rs
 //
-// A list of scores (one per line) of a soccer match is given. Each line is of
-// the form : "<team_1_name>,<team_2_name>,<team_1_goals>,<team_2_goals>"
-// Example: England,France,4,2 (England scored 4 goals, France 2).
+// 给出了一场足球比赛的得分列表（每行一个）。每行的格式为：
+// "<队伍1名称>,<队伍2名称>,<队伍1进球>,<队伍2进球>"
+// 例如：England,France,4,2（英格兰进了4个球，法国进了2个球）。
 //
-// You have to build a scores table containing the name of the team, goals the
-// team scored, and goals the team conceded. One approach to build the scores
-// table is to use a Hashmap. The solution is partially written to use a
-// Hashmap, complete it to pass the test.
+// 你需要建立一个得分表，包含队伍名称、队伍进球数和队伍失球数。
+// 一种建立得分表的方法是使用哈希映射。解决方案已经部分写好使用哈希映射，
+// 请完成它以通过测试。
 //
-// Make me pass the tests!
+// 让我通过测试！
 //
-// Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a
-// hint.
-
-// I AM NOT DONE
+// 执行 `rustlings hint hashmaps3` 或使用 `hint` watch 子命令获取提示。
 
 use std::collections::HashMap;
 
-// A structure to store the goal details of a team.
+// 一个存储队伍进球详情的结构体。
 struct Team {
     goals_scored: u8,
     goals_conceded: u8,
 }
 
 fn build_scores_table(results: String) -> HashMap<String, Team> {
-    // The name of the team is the key and its associated struct is the value.
+    // 队伍名称是键，其关联的结构体是值。
     let mut scores: HashMap<String, Team> = HashMap::new();
 
     for r in results.lines() {
@@ -34,11 +30,24 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         let team_1_score: u8 = v[2].parse().unwrap();
         let team_2_name = v[1].to_string();
         let team_2_score: u8 = v[3].parse().unwrap();
-        // TODO: Populate the scores table with details extracted from the
-        // current line. Keep in mind that goals scored by team_1
-        // will be the number of goals conceded from team_2, and similarly
-        // goals scored by team_2 will be the number of goals conceded by
-        // team_1.
+        
+        // 更新或插入队伍1的得分
+        scores.entry(team_1_name).and_modify(|team| {
+            team.goals_scored += team_1_score;
+            team.goals_conceded += team_2_score;
+        }).or_insert(Team {
+            goals_scored: team_1_score,
+            goals_conceded: team_2_score,
+        });
+
+        // 更新或插入队伍2的得分
+        scores.entry(team_2_name).and_modify(|team| {
+            team.goals_scored += team_2_score;
+            team.goals_conceded += team_1_score;
+        }).or_insert(Team {
+            goals_scored: team_2_score,
+            goals_conceded: team_1_score,
+        });
     }
     scores
 }

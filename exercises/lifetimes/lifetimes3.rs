@@ -1,15 +1,12 @@
 // lifetimes3.rs
 //
-// Lifetimes are also needed when structs hold references.
+// 结构体中的引用也需要生命周期。
 //
-// Execute `rustlings hint lifetimes3` or use the `hint` watch subcommand for a
-// hint.
+// 执行 `rustlings hint lifetimes3` 或使用 `hint` watch 子命令获取提示。
 
-// I AM NOT DONE
-
-struct Book {
-    author: &str,
-    title: &str,
+struct Book<'a> {
+    author: &'a str,
+    title: &'a str,
 }
 
 fn main() {

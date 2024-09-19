@@ -1,20 +1,18 @@
 // hashmaps2.rs
 //
-// We're collecting different fruits to bake a delicious fruit cake. For this,
-// we have a basket, which we'll represent in the form of a hash map. The key
-// represents the name of each fruit we collect and the value represents how
-// many of that particular fruit we have collected. Three types of fruits -
-// Apple (4), Mango (2) and Lychee (5) are already in the basket hash map. You
-// must add fruit to the basket so that there is at least one of each kind and
-// more than 11 in total - we have a lot of mouths to feed. You are not allowed
-// to insert any more of these fruits!
+// 我们正在收集不同的水果来烤一个美味的水果蛋糕。为此，
+// 我们有一个篮子，我们将用哈希映射的形式表示。键
+// 代表我们收集的每种水果的名称，值代表我们收集了
+// 多少特定水果。三种水果 -
+// 苹果（4个），芒果（2个）和荔枝（5个）已经在篮子哈希映射中。你
+// 必须向篮子中添加水果，使每种水果至少有一个，总数
+// 超过11个 - 我们有很多人要喂。你不允许
+// 再插入这些已有的水果！
 //
-// Make me pass the tests!
+// 让我通过测试！
 //
-// Execute `rustlings hint hashmaps2` or use the `hint` watch subcommand for a
-// hint.
-
-// I AM NOT DONE
+// 执行 `rustlings hint hashmaps2` 或使用 `hint` watch 子命令获取
+// 提示。
 
 use std::collections::HashMap;
 
@@ -37,9 +35,10 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
     ];
 
     for fruit in fruit_kinds {
-        // TODO: Insert new fruits if they are not already present in the
-        // basket. Note that you are not allowed to put any type of fruit that's
-        // already present!
+        // 如果水果不在篮子中，则插入新水果
+        if !basket.contains_key(&fruit) {
+            basket.insert(fruit, 1);
+        }
     }
 }
 
@@ -47,7 +46,7 @@ fn fruit_basket(basket: &mut HashMap<Fruit, u32>) {
 mod tests {
     use super::*;
 
-    // Don't modify this function!
+    // 不要修改这个函数！
     fn get_fruit_basket() -> HashMap<Fruit, u32> {
         let mut basket = HashMap::<Fruit, u32>::new();
         basket.insert(Fruit::Apple, 4);
