@@ -1,38 +1,32 @@
 /*
 	queue
-	This question requires you to use queues to implement the functionality of the stack
+	这个问题要求你使用队列来实现栈的功能
 */
 
+use std::collections::VecDeque;
 
 #[derive(Debug)]
 pub struct Queue<T> {
-    elements: Vec<T>,
+    elements: VecDeque<T>,
 }
 
 impl<T> Queue<T> {
     pub fn new() -> Queue<T> {
         Queue {
-            elements: Vec::new(),
+            elements: VecDeque::new(),
         }
     }
 
     pub fn enqueue(&mut self, value: T) {
-        self.elements.push(value)
+        self.elements.push_back(value)
     }
 
-    pub fn dequeue(&mut self) -> Result<T, &str> {
-        if !self.elements.is_empty() {
-            Ok(self.elements.remove(0usize))
-        } else {
-            Err("Queue is empty")
-        }
+    pub fn dequeue(&mut self) -> Option<T> {
+        self.elements.pop_front()
     }
 
-    pub fn peek(&self) -> Result<&T, &str> {
-        match self.elements.first() {
-            Some(value) => Ok(value),
-            None => Err("Queue is empty"),
-        }
+    pub fn peek(&self) -> Option<&T> {
+        self.elements.front()
     }
 
     pub fn size(&self) -> usize {
@@ -47,22 +41,21 @@ impl<T> Queue<T> {
 impl<T> Default for Queue<T> {
     fn default() -> Queue<T> {
         Queue {
-            elements: Vec::new(),
+            elements: VecDeque::new(),
         }
     }
 }
 
-pub struct myStack<T>
-{
+pub struct MyStack<T> {
     q1: Queue<T>,
-    q2: Queue<T>
+    q2: Queue<T>,
 }
 
-impl<T> myStack<T> {
+impl<T> MyStack<T> {
     pub fn new() -> Self {
         Self {
             q1: Queue::new(),
-            q2: Queue::new()
+            q2: Queue::new(),
         }
     }
     
@@ -70,13 +63,13 @@ impl<T> myStack<T> {
         self.q1.enqueue(elem);
     }
     
-    pub fn pop(&mut self) -> Result<T, &str> {
+    pub fn pop(&mut self) -> Option<T> {
         if self.is_empty() {
-            return Err("Stack is empty");
+            return None;
         }
         
         while self.q1.size() > 1 {
-            if let Ok(item) = self.q1.dequeue() {
+            if let Some(item) = self.q1.dequeue() {
                 self.q2.enqueue(item);
             }
         }
@@ -93,24 +86,24 @@ impl<T> myStack<T> {
 
 #[cfg(test)]
 mod tests {
-	use super::*;
-	
-	#[test]
-	fn test_queue(){
-		let mut s = myStack::<i32>::new();
-		assert_eq!(s.pop(), Err("Stack is empty"));
+    use super::*;
+    
+    #[test]
+    fn test_stack() {
+        let mut s = MyStack::<i32>::new();
+        assert_eq!(s.pop(), None);
         s.push(1);
         s.push(2);
         s.push(3);
-        assert_eq!(s.pop(), Ok(3));
-        assert_eq!(s.pop(), Ok(2));
+        assert_eq!(s.pop(), Some(3));
+        assert_eq!(s.pop(), Some(2));
         s.push(4);
         s.push(5);
         assert_eq!(s.is_empty(), false);
-        assert_eq!(s.pop(), Ok(5));
-        assert_eq!(s.pop(), Ok(4));
-        assert_eq!(s.pop(), Ok(1));
-        assert_eq!(s.pop(), Err("Stack is empty"));
+        assert_eq!(s.pop(), Some(5));
+        assert_eq!(s.pop(), Some(4));
+        assert_eq!(s.pop(), Some(1));
+        assert_eq!(s.pop(), None);
         assert_eq!(s.is_empty(), true);
-	}
+    }
 }
